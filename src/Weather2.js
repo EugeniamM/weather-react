@@ -238,15 +238,18 @@ export default function Weather2() {
 					</div>
 				</div>
 			</div>
-			<p>
-				<a href="https://github.com/EugeniamM/weather-react.git" target="blanc">
+			<footer>
+				<a
+					href="https://github.com/EugeniamM/weather-react.git"
+					target="_blanc"
+				>
 					Open-source code
 				</a>{" "}
 				from{" "}
-				<a href="https://super-babka-75dc22.netlify.app" target="blanc">
+				<a href="https://super-babka-75dc22.netlify.app" target="_blanc">
 					Ievgeniia Mukhamet
 				</a>
-			</p>
+			</footer>
 		</div>
 	);
 }
