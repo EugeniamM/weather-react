@@ -18,10 +18,9 @@ export default function Weather2() {
 	//let [currentDate, setCurrentDate] =useState("");
 	let [currentTime, setCurrentTime] = useState("");
 	let [updateTime, setUpdateTime] = useState("");
-//	let [currentMetric, setCurrentMetric] = "C";
-/	let currentMetric = "C";
+	//	let [currentMetric, setCurrentMetric] = "C";
+	let currentMetric = "C";
 
-	
 	//current date and time
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const months = [
