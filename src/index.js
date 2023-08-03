@@ -17,7 +17,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
 	<React.StrictMode>
 		<div className="container">
-			<Weather2 />
+			<Weather2 defcity="Odessa" />
 		</div>
 	</React.StrictMode>
 );

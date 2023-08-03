@@ -9,7 +9,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 // Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
-export default function Weather2() {
+export default function Weather2(props) {
 	//
 	let [city, setCity] = useState("");
 
@@ -141,7 +141,7 @@ export default function Weather2() {
 	}
 
 	if (!loaded) {
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=Odesa&appid=${apiKey}&units=${unitName}`;
+		const url = `https://api.openweathermap.org/data/2.5/weather?q=${props.defcity}&appid=${apiKey}&units=${unitName}`;
 		axios.get(url).then(getCityInfo).catch(getCityInfoError);
 	}
 
