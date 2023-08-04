@@ -11,28 +11,15 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 
 export default function Weather2(props) {
 	//
-	let [city, setCity] = useState("");
+	//let [city, setCity] = useState("");
 
-	let [loaded, setLoaded] = useState(false);
-	let [weatherData, setWeatherData] = useState({ unitName: "metric" });
+	//	let [loaded, setLoaded] = useState(false);
+	let [weatherData, setWeatherData] = useState({ unitName: "metric", loaded: false });
 	// .let [updateTime, setUpdateTime] = useState("");
 
 	//current date and time
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-	const months = [
-		"January",
-		"February",
-		"March",
-		"April",
-		"May",
-		"June",
-		"July",
-		"August",
-		"September",
-		"October",
-		"November",
-		"December",
-	];
+	const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	//const shortMonths = [ "Jan", "Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec",];
 
 	const apiKey = "281450ec88936f4fa8ee9864682b49a0";
@@ -41,7 +28,7 @@ export default function Weather2(props) {
 
 	//changing city name
 	function changeCity(event) {
-		setCity(event.target.value);
+		setWeatherData({ city: event.target.value });
 	}
 
 	// current date and time from Data();
@@ -51,19 +38,14 @@ export default function Weather2(props) {
 			" " +
 			months[dataInfo.getMonth()] +
 			" " +
-			(dataInfo.getHours() < 10
-				? `0${dataInfo.getHours()}`
-				: dataInfo.getHours()) +
+			(dataInfo.getHours() < 10 ? `0${dataInfo.getHours()}` : dataInfo.getHours()) +
 			":" +
-			(dataInfo.getMinutes() < 10
-				? `0${dataInfo.getMinutes()}`
-				: dataInfo.getMinutes())
+			(dataInfo.getMinutes() < 10 ? `0${dataInfo.getMinutes()}` : dataInfo.getMinutes())
 		);
 	}
 
 	//set weather info
 	function setCityInfo(response) {
-		setLoaded(true);
 		setWeatherData({
 			city: response.data.name,
 			temperature: response.data.main.temp,
@@ -75,7 +57,6 @@ export default function Weather2(props) {
 			icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
 			description: response.data.weather[0].description,
 			units: "C",
-
 			updateTime: getDateString(new Date(response.data.dt * 1000)),
 		});
 	}
@@ -85,100 +66,65 @@ export default function Weather2(props) {
 		alert("Error");
 	}
 
-	function getCityInfo(city) {
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${unitName}`;
+	function getCityInfo(cityName) {
+		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
 	}
 
 	//load weather info after submit press
 	function searchFunc(event) {
 		event.preventDefault();
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${unitName}`;
-		axios.get(url).then(setCityInfo).catch(getCityInfoError);
-	}
-
-	function getLondonInfo(event) {
-		event.preventDefault();
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=London&appid=${apiKey}&units=${unitName}`;
-		axios.get(url).then(setCityInfo).catch(getCityInfoError);
-	}
-	function getOdessaInfo(event) {
-		event.preventDefault();
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=Odesa&appid=${apiKey}&units=${unitName}`;
-		axios.get(url).then(setCityInfo).catch(getCityInfoError);
-	}
-
-	function getLisbonInfo(event) {
-		event.preventDefault();
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=Lisbon&appid=${apiKey}&units=${unitName}`;
-		axios.get(url).then(setCityInfo).catch(getCityInfoError);
+		getCityInfo(weatherData.city);
 	}
 
 	function getInfoByPosition(position) {
-		let apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${
-			position.coords.latitude
-		}&lon=${position.coords.longitude}&appid=${apiKey}&units=${
-			weatherData.units === "C" ? "metric" : "imperial"
-		}`;
+		let apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=${weatherData.unitName}`;
 		axios.get(apiUrl1).then(setCityInfo).catch(getCityInfoError);
 	}
 
-	function getCurrentLocation() {
-		navigator.geolocation.getCurrentPosition(getInfoByPosition);
-	}
+	///	function getCurrentLocation() {
+	//		navigator.geolocation.getCurrentPosition(getInfoByPosition);
+	//	}
 
-	if (!loaded) {
-		setWeatherData({
-			city: props.defcity,
-		});
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=${
-			weatherData.city
-		}&appid=${apiKey}&units=${
-			weatherData.units === "C" ? "metric" : "imperial"
-		}`;
-		axios.get(url).then(setCityInfo).catch(getCityInfoError);
+	if (!weatherData.loaded) {
+		setWeatherData({ city: props.defcity, loaded: true });
+		getCityInfo(weatherData.city);
 	}
 
 	return (
 		<div className="Weather">
 			<div className="container mainPanel">
 				<div className="d-flex justify-content-between ">
-					<div className="current-city" onClick={getCurrentLocation}>
+					<div className="current-city" onClick={navigator.geolocation.getCurrentPosition(getInfoByPosition)}>
 						Current city
 					</div>
-					<div className="current-city" onClick={getLondonInfo}>
+					<div className="current-city" onClick={getCityInfo("London")}>
 						London
 					</div>
-					<div className="current-city" onClick={getOdessaInfo}>
+					<div className="current-city" onClick={getCityInfo("Odessa")}>
 						Odessa
 					</div>
-					<div className="current-city" onClick={getLisbonInfo}>
+					<div className="current-city" onClick={getCityInfo("Lisbon")}>
 						Lisbon
 					</div>
 				</div>
 				<div className="container p-0">
-					<form
-						className="d-flex mt-1 justify-content-center w-100"
-						role="search"
-						onSubmit={searchFunc}
-					>
-						<input
-							className="form-control searchInput w-100"
-							type="search"
-							placeholder="Enter a city name"
-							onChange={changeCity}
-						/>
+					<form className="d-flex mt-1 justify-content-center w-100" role="search" onSubmit={searchFunc}>
+						<input className="form-control searchInput w-100" type="search" placeholder="Enter a city name" onChange={changeCity} />
 						<button className="btn btn-outline-warning searchBtn" type="submit">
 							<i className="fa-solid fa-magnifying-glass searchIcon"></i>
 						</button>
 					</form>
 				</div>
+
 				<h1 className="city-name">{weatherData.city}</h1>
 
 				<div className="main-info">
-					<b> Update time :</b> {weatherData.updateTime}
+					<b> Update time :</b>
+					{weatherData.updateTime}
 					<br />
-					<b> Feels like:</b> {weatherData.feelslike}° C <b>Min: </b>
+					<b> Feels like:</b>
+					{weatherData.feelslike}° C <b>Min: </b>
 					{weatherData.mintemp}° C <b>Max: </b>
 					{weatherData.maxtemp}° C{" "}
 				</div>
@@ -186,34 +132,26 @@ export default function Weather2(props) {
 				<div className="d-flex justify-content-between align-items-center">
 					<div>
 						<img src={weatherData.icon} alt="Clear" />
-						<span className="main-temp">
-							{Math.round(weatherData.temperature)}
-						</span>
+						<span className="main-temp">{Math.round(weatherData.temperature)}</span>
 						<span className="units">
-							<span id="celsius" className="currTempUnit">
-								°C
-							</span>
-							|
-							<span id="fahrenheit" className="tempUnit">
-								°F
-							</span>
+							<span className="currTempUnit">°C</span>|<span className="tempUnit">°F</span>
 						</span>
 					</div>
 
 					<div className="mr-4">
 						<div className="main-info">
-							<b>Humidity</b>: {weatherData.humidity}% <br />
-							<b>Wind:</b> {weatherData.wind} km/h <br />
+							<b>Humidity:</b>
+							{weatherData.humidity}%
+							<br />
+							<b>Wind:</b>
+							{weatherData.wind} km/h <br />
 							{weatherData.description}
 						</div>
 					</div>
 				</div>
 			</div>
 			<footer>
-				<a
-					href="https://github.com/EugeniamM/weather-react.git"
-					target="_blanc"
-				>
+				<a href="https://github.com/EugeniamM/weather-react.git" target="_blanc">
 					Open-source code
 				</a>{" "}
 				from{" "}
