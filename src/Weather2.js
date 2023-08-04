@@ -10,14 +10,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 export default function Weather2(props) {
-	//
-	//let [city, setCity] = useState("");
-
-	//	let [loaded, setLoaded] = useState(false);
 	let [weatherData, setWeatherData] = useState({ unitName: "metric", loaded: false });
-	// .let [updateTime, setUpdateTime] = useState("");
 
-	//current date and time
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	//const shortMonths = [ "Jan", "Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec",];
@@ -56,7 +50,7 @@ export default function Weather2(props) {
 			humidity: response.data.main.humidity,
 			icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
 			description: response.data.weather[0].description,
-			units: "C",
+			//		units: "C",
 			updateTime: getDateString(new Date(response.data.dt * 1000)),
 		});
 	}
@@ -85,6 +79,28 @@ export default function Weather2(props) {
 	///	function getCurrentLocation() {
 	//		navigator.geolocation.getCurrentPosition(getInfoByPosition);
 	//	}
+	function changeToMetric() {
+		if (weatherData.unitName === "imperial") {
+			setWeatherData({
+				temperature: ((weatherData.temperature - 32) * 5) / 9,
+				mintemp: ((weatherData.mintemp - 32) * 5) / 9,
+				maxtemp: ((weatherData.maxtemp - 32) * 5) / 9,
+				feelslike: ((weatherData.feelslike - 32) * 5) / 9,
+				unitName: "metric",
+			});
+		}
+	}
+	function changeToFahrenheit() {
+		if (weatherData.unitName === "metric") {
+			setWeatherData({
+				temperature: (weatherData.temperature * 9) / 5 + 32,
+				mintemp: (weatherData.mintemp * 9) / 5 + 32,
+				maxtemp: (weatherData.maxtemp * 9) / 5 + 32,
+				feelslike: (weatherData.feelslike * 9) / 5 + 32,
+				unitName: "imperial",
+			});
+		}
+	}
 
 	if (!weatherData.loaded) {
 		setWeatherData({ city: props.defcity, loaded: true });
@@ -134,7 +150,13 @@ export default function Weather2(props) {
 						<img src={weatherData.icon} alt="Clear" />
 						<span className="main-temp">{Math.round(weatherData.temperature)}</span>
 						<span className="units">
-							<span className="currTempUnit">°C</span>|<span className="tempUnit">°F</span>
+							<span className={weatherData.unitName === "metric" ? "currentUnit" : "tempUnit"} onClick={changeToMetric}>
+								°C
+							</span>
+							|
+							<span className={weatherData.unitName !== "metric" ? "currentUnit" : "tempUnit"} onClick={changeToFahrenheit}>
+								°F
+							</span>
 						</span>
 					</div>
 
