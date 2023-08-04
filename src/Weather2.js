@@ -37,20 +37,7 @@ export default function Weather2(props) {
 		"November",
 		"December",
 	];
-	//const shortMonths = [
-	// "Jan",
-	// "Feb",
-	//"Mar",
-	//"Apr",
-	//"May",
-	//"Jun",
-	// "Jul",
-	//"Aug",
-	//"Sep",
-	//"Oct",
-	//"Nov",
-	//"Dec",
-	//];
+	//const shortMonths = [ "Jan", "Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec",];
 
 	const apiKey = "281450ec88936f4fa8ee9864682b49a0";
 	const unitName = `metric`;
@@ -77,12 +64,9 @@ export default function Weather2(props) {
 				: dataInfo.getMinutes())
 		);
 	}
-	//  const selDateTime = new Date(response.data.dt * 1000);
+
 	//set weather info
 	function getCityInfo(response) {
-		//const localDate = new Date();
-		//const updDate = new Date(response.data.dt * 1000);
-
 		setCurrentTime(getDateString(new Date()));
 		setUpdateTime(getDateString(new Date(response.data.dt * 1000)));
 
@@ -97,6 +81,7 @@ export default function Weather2(props) {
 			humidity: response.data.main.humidity,
 			icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
 			description: response.data.weather[0].description,
+			unitName: "C",
 		});
 	}
 
@@ -111,21 +96,6 @@ export default function Weather2(props) {
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${unitName}`;
 		axios.get(url).then(getCityInfo).catch(getCityInfoError);
 	}
-	/*
-	function getInfoByPosition(position) {
-		let unitName = "metric";
-		if (currentMetric === "F") {
-			unitName = "imperial";
-		}
-
-		let apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=${unitName}`;
-		axios.get(apiUrl1).then(getCityInfo).catch(getCityInfoError);
-	}
-
-	function currentCityHandler() {
-		navigator.geolocation.getCurrentPosition(getInfoByPosition);
-	}
-*/
 	function getInfoByPosition(position) {
 		let unitName = "metric";
 		if (currentMetric === "F") {
