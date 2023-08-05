@@ -4,25 +4,35 @@ import axios from "axios";
 import "./Weather2.css";
 
 //import Forecast from "./Forecast";
-
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
+// Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 export default function Weather2(props) {
-	let [weatherData, setWeatherData] = useState({ city: props.city, unitName: "metric", loaded: false });
+	//
+	let [city, setCity] = useState("");
 
+	let [loaded, setLoaded] = useState(false);
+	let [weatherData, setWeatherData] = useState({});
+	//let [currentDate, setCurrentDate] =useState("");
+	let [currentTime, setCurrentTime] = useState("");
+	let [updateTime, setUpdateTime] = useState("");
+	//	let [currentMetric, setCurrentMetric] = "C";
+	let currentMetric = "C";
+
+	//current date and time
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	//const shortMonths = [ "Jan", "Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec",];
 
-	//const apiKey = "281450ec88936f4fa8ee9864682b49a0";
+	const apiKey = "281450ec88936f4fa8ee9864682b49a0";
 	const unitName = `metric`;
-	const apiKey = "6782253072f7d90462731a624097fc54";
+	//const apiKey2 = "6782253072f7d90462731a624097fc54";
 
 	//changing city name
 	function changeCity(event) {
-		setWeatherData({ city: event.target.value });
+		setCity(event.target.value);
 	}
 
 	// current date and time from Data();
@@ -39,8 +49,11 @@ export default function Weather2(props) {
 	}
 
 	//set weather info
-	function setCityInfo(response) {
-		console.log("setCityInfo");
+	function getCityInfo(response) {
+		setCurrentTime(getDateString(new Date()));
+		setUpdateTime(getDateString(new Date(response.data.dt * 1000)));
+
+		setLoaded(true);
 		setWeatherData({
 			city: response.data.name,
 			temperature: response.data.main.temp,
@@ -51,11 +64,8 @@ export default function Weather2(props) {
 			humidity: response.data.main.humidity,
 			icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
 			description: response.data.weather[0].description,
-			//		units: "C",
-			updateTime: getDateString(new Date(response.data.dt * 1000)),
+			unitName: "C",
 		});
-		console.log("setCityInfo 2");
-		console.log(weatherData);
 	}
 
 	// if weather no loaded
@@ -63,113 +73,92 @@ export default function Weather2(props) {
 		alert("Error");
 	}
 
-	function getCityInfo(cityName) {
-		console.log(cityName + " city info");
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${unitName}`;
-		console.log(url + " city info");
-		axios.get(url).then(setCityInfo).catch(getCityInfoError);
-	}
-
 	//load weather info after submit press
 	function searchFunc(event) {
 		event.preventDefault();
-		getCityInfo(weatherData.city);
+		const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=${unitName}`;
+		axios.get(url).then(getCityInfo).catch(getCityInfoError);
 	}
-
 	function getInfoByPosition(position) {
-		let apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=${weatherData.unitName}`;
-		axios.get(apiUrl1).then(setCityInfo).catch(getCityInfoError);
-	}
-
-	///	function getCurrentLocation() {
-	//		navigator.geolocation.getCurrentPosition(getInfoByPosition);
-	//	}
-	function changeToMetric() {
-		if (weatherData.unitName === "imperial") {
-			setWeatherData({
-				temperature: ((weatherData.temperature - 32) * 5) / 9,
-				mintemp: ((weatherData.mintemp - 32) * 5) / 9,
-				maxtemp: ((weatherData.maxtemp - 32) * 5) / 9,
-				feelslike: ((weatherData.feelslike - 32) * 5) / 9,
-				unitName: "metric",
-			});
+		let unitName = "metric";
+		if (currentMetric === "F") {
+			unitName = "imperial";
 		}
-	}
-	function changeToFahrenheit() {
-		if (weatherData.unitName === "metric") {
-			setWeatherData({
-				temperature: (weatherData.temperature * 9) / 5 + 32,
-				mintemp: (weatherData.mintemp * 9) / 5 + 32,
-				maxtemp: (weatherData.maxtemp * 9) / 5 + 32,
-				feelslike: (weatherData.feelslike * 9) / 5 + 32,
-				unitName: "imperial",
-			});
-		}
-	}
-	console.log(weatherData.city + "  main");
 
-	if (weatherData.loaded === false) {
-		setWeatherData({ loaded: true });
-		getCityInfo(props.defcity);
-		console.log("if after get city info");
-
-		console.log(weatherData);
+		let apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=${unitName}`;
+		axios.get(apiUrl1).then(getCityInfo).catch(getCityInfoError);
 	}
+
+	function getCurrentLocation() {
+		navigator.geolocation.getCurrentPosition(getInfoByPosition);
+	}
+
+	if (!loaded) {
+		const url = `https://api.openweathermap.org/data/2.5/weather?q=${props.defcity}&appid=${apiKey}&units=${unitName}`;
+		axios.get(url).then(getCityInfo).catch(getCityInfoError);
+		console.log(props.defcity);
+	}
+
 	return (
-		<div>
-			{weatherData.city}
-			<br />
-			{weatherData.temp}
-			<br />
-			{weatherData.loaded}
-		</div> /*
 		<div className="Weather">
 			<div className="container mainPanel">
-				<div className="d-flex justify-content-between ">
-					<div className="current-city" onClick={navigator.geolocation.getCurrentPosition(getInfoByPosition)}>
+				<div className="d-flex  justify-content-between ">
+					<div className="current-city" id="current-city-link" onClick={getCurrentLocation}>
 						Current city
 					</div>
-					<div className="current-city" onClick={getCityInfo("London")}>
-						London
-					</div>
-					<div className="current-city" onClick={getCityInfo("Odessa")}>
-						Odessa
-					</div>
-					<div className="current-city" onClick={getCityInfo("Lisbon")}>
-						Lisbon
+					<div className="current-date-time" id="current-data-time">
+						{currentTime}
 					</div>
 				</div>
 				<div className="container p-0">
-					<form className="d-flex mt-1 justify-content-center w-100" role="search" onSubmit={searchFunc}>
-						<input className="form-control searchInput w-100" type="search" placeholder="Enter a city name" onChange={changeCity} />
+					<form className="d-flex mt-1 justify-content-center w-100" role="search" id="search-form" onSubmit={searchFunc}>
+						<input
+							className="form-control searchInput w-100"
+							type="search"
+							placeholder="Enter a city name"
+							aria-label="newCity"
+							id="inputCity"
+							onChange={changeCity}
+						/>
 						<button className="btn btn-outline-warning searchBtn" type="submit">
 							<i className="fa-solid fa-magnifying-glass searchIcon"></i>
 						</button>
 					</form>
 				</div>
-
-				<h1 className="city-name">{weatherData.city}</h1>
+				<h1 className="city-name" id="sel-city">
+					{weatherData.city}
+				</h1>
 
 				<div className="main-info">
-					<b> Update time :</b>
-					{weatherData.updateTime}
+					<span id="sel-date-time"> {updateTime}</span>
 					<br />
-					<b> Feels like:</b>
-					{weatherData.feelslike}° C <b>Min: </b>
-					{weatherData.mintemp}° C <b>Max: </b>
-					{weatherData.maxtemp}° C{" "}
+					<span>
+						<b> Feels like:</b> <span id="feels-like">{weatherData.feelslike}</span>°<span id="feels-like-unit">C</span>
+					</span>
+					<span>
+						{" "}
+						<b>Min: </b>
+						<span id="min-temp"> {weatherData.mintemp}</span>°<span id="min-temp-unit">C</span>{" "}
+					</span>
+					<span>
+						{" "}
+						<b>Max: </b>
+						<span id="max-temp"> {weatherData.maxtemp}</span>°<span id="max-temp-unit">C</span>{" "}
+					</span>
 				</div>
 
-				<div className="d-flex justify-content-between align-items-center">
+				<div className=" d-flex  justify-content-between align-items-center">
 					<div>
-						<img src={weatherData.icon} alt="Clear" />
-						<span className="main-temp">{Math.round(weatherData.temperature)}</span>
+						<img id="main-icon" src={weatherData.icon} alt="Clear" />
+						<span className="main-temp">
+							<span id="sel-temp"> {Math.round(weatherData.temperature)}</span>
+						</span>
 						<span className="units">
-							<span className={weatherData.unitName === "metric" ? "currentUnit" : "tempUnit"} onClick={changeToMetric}>
+							<span id="celsius" className="currTempUnit">
 								°C
 							</span>
-							|
-							<span className={weatherData.unitName !== "metric" ? "currentUnit" : "tempUnit"} onClick={changeToFahrenheit}>
+							<span> | </span>
+							<span id="fahrenheit" className="tempUnit">
 								°F
 							</span>
 						</span>
@@ -177,12 +166,15 @@ export default function Weather2(props) {
 
 					<div className="mr-4">
 						<div className="main-info">
-							<b>Humidity:</b>
-							{weatherData.humidity}%
+							<span id="sel-humidity">
+								<b>Humidity</b>: {weatherData.humidity}%
+							</span>
 							<br />
-							<b>Wind:</b>
-							{weatherData.wind} km/h <br />
-							{weatherData.description}
+							<span id="sel-wind">
+								<b>Wind:</b> {weatherData.wind} km/h
+							</span>
+							<br />
+							<span id="description"> {weatherData.description}</span>
 						</div>
 					</div>
 				</div>
@@ -196,9 +188,10 @@ export default function Weather2(props) {
 					Ievgeniia Mukhamet
 				</a>
 			</footer>
-		</div>*/
+		</div>
 	);
 }
+
 /*<div className=" d-flex justify-content-between">
 					<Forecast
 						mintemp="18"
