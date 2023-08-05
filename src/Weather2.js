@@ -12,14 +12,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 export default function Weather2(props) {
 	//
 	let [city, setCity] = useState("");
-
-	let [loaded, setLoaded] = useState(false);
-	let [weatherData, setWeatherData] = useState({});
-	//let [currentDate, setCurrentDate] =useState("");
-	//	let [currentTime, setCurrentTime] = useState("");
-	let [updateTime, setUpdateTime] = useState({ unitName: "metric" });
-	//	let [currentMetric, setCurrentMetric] = "C";
-	let currentMetric = "C";
+	let [weatherData, setWeatherData] = useState({ unitName: "metric", loaded: false });
 
 	//current date and time
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -50,10 +43,6 @@ export default function Weather2(props) {
 
 	//set weather info
 	function setCityInfo(response) {
-		//	setCurrentTime(getDateString(new Date()));
-		setUpdateTime(getDateString(new Date(response.data.dt * 1000)));
-
-		setLoaded(true);
 		setWeatherData({
 			city: response.data.name,
 			temperature: response.data.main.temp,
@@ -64,10 +53,13 @@ export default function Weather2(props) {
 			humidity: response.data.main.humidity,
 			icon: `https://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`,
 			description: response.data.weather[0].description,
+			loaded: true,
+			unitName: weatherData.unitName,
+			updateTime: getDateString(new Date(response.data.dt * 1000)),
 		});
 	}
 	function getCityInfo(cityName) {
-		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${unitName}`;
+		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${weatherData.unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
 		console.log(cityName);
 	}
@@ -83,20 +75,57 @@ export default function Weather2(props) {
 		getCityInfo(city);
 	}
 	function getInfoByPosition(position) {
-		let unitName = "metric";
-		if (currentMetric === "F") {
-			unitName = "imperial";
-		}
-
-		let apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=${unitName}`;
+		let apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=${weatherData.unitName}`;
 		axios.get(apiUrl1).then(setCityInfo).catch(getCityInfoError);
+		console.log(apiUrl1);
 	}
 
 	function getCurrentLocation() {
 		navigator.geolocation.getCurrentPosition(getInfoByPosition);
 	}
+	function changeToMetric() {
+		console.log("changeToMetric");
+		console.log(weatherData);
+		if (weatherData.unitName === "imperial") {
+			setWeatherData({
+				temperature: ((weatherData.temperature - 32) * 5) / 9,
+				mintemp: ((weatherData.mintemp - 32) * 5) / 9,
+				maxtemp: ((weatherData.maxtemp - 32) * 5) / 9,
+				feelslike: ((weatherData.feelslike - 32) * 5) / 9,
+				unitName: "metric",
+				city: weatherData.city,
+				wind: weatherData.wind,
+				humidity: weatherData.humidity,
+				icon: weatherData.icon,
+				description: weatherData.description,
+				loaded: true,
+				updateTime: weatherData.updateTime,
+			});
+		}
+	}
+	function changeToFahrenheit() {
+		console.log("changeToFahrenheit");
+		console.log(weatherData);
+		if (weatherData.unitName === "metric") {
+			setWeatherData({
+				temperature: (weatherData.temperature * 9) / 5 + 32,
+				mintemp: (weatherData.mintemp * 9) / 5 + 32,
+				maxtemp: (weatherData.maxtemp * 9) / 5 + 32,
+				feelslike: (weatherData.feelslike * 9) / 5 + 32,
+				unitName: "imperial",
+				city: weatherData.city,
+				wind: weatherData.wind,
+				humidity: weatherData.humidity,
+				icon: weatherData.icon,
+				description: weatherData.description,
+				loaded: true,
+				updateTime: weatherData.updateTime,
+			});
+		}
+	}
 
-	if (!loaded) {
+	console.log(weatherData);
+	if (weatherData.loaded === false) {
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${props.defcity}&appid=${apiKey}&units=${unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
 		console.log(props.defcity);
@@ -140,12 +169,12 @@ export default function Weather2(props) {
 					<h1 className="city-name">{weatherData.city}</h1>
 
 					<div className="main-info">
-						<b>Update time:</b>
-						{updateTime}
+						<b>Update time: </b>
+						{weatherData.updateTime}
 						<br />
-						<b> Feels like:</b> {weatherData.feelslike}°C <b>Min: </b>
-						{weatherData.mintemp}°C <b>Max: </b>
-						{weatherData.maxtemp}°C{" "}
+						<b> Feels like:</b> {Math.round(weatherData.feelslike)}°C <b> Min: </b>
+						{Math.round(weatherData.mintemp)}°C <b> Max: </b>
+						{Math.round(weatherData.maxtemp)}°C{" "}
 					</div>
 
 					<div className=" d-flex  justify-content-between align-items-center">
@@ -153,7 +182,13 @@ export default function Weather2(props) {
 							<img src={weatherData.icon} alt="Clear" />
 							<span className="main-temp">{Math.round(weatherData.temperature)}</span>
 							<span className="units">
-								<span className="currTempUnit">°C</span> | <span className="tempUnit">°F</span>
+								<span className={weatherData.unitName === "metric" ? "currentUnit" : "tempUnit"} onClick={changeToMetric}>
+									°C
+								</span>{" "}
+								|{" "}
+								<span className={weatherData.unitName !== "metric" ? "currentUnit" : "tempUnit"} onClick={changeToFahrenheit}>
+									°F
+								</span>
 							</span>
 						</div>
 
@@ -163,7 +198,7 @@ export default function Weather2(props) {
 								<br />
 								<b>Wind:</b> {weatherData.wind} km/h
 								<br />
-								{weatherData.description}
+								<span className="text-capitalize">{weatherData.description}</span>
 							</div>
 						</div>
 					</div>
