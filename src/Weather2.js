@@ -61,7 +61,6 @@ export default function Weather2(props) {
 	function getCityInfo(cityName) {
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${weatherData.unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
-		console.log(cityName);
 	}
 
 	// if weather no loaded
@@ -77,15 +76,12 @@ export default function Weather2(props) {
 	function getInfoByPosition(position) {
 		let apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${position.coords.latitude}&lon=${position.coords.longitude}&appid=${apiKey}&units=${weatherData.unitName}`;
 		axios.get(apiUrl1).then(setCityInfo).catch(getCityInfoError);
-		console.log(apiUrl1);
 	}
 
 	function getCurrentLocation() {
 		navigator.geolocation.getCurrentPosition(getInfoByPosition);
 	}
 	function changeToMetric() {
-		console.log("changeToMetric");
-		console.log(weatherData);
 		if (weatherData.unitName === "imperial") {
 			setWeatherData({
 				temperature: ((weatherData.temperature - 32) * 5) / 9,
@@ -104,8 +100,6 @@ export default function Weather2(props) {
 		}
 	}
 	function changeToFahrenheit() {
-		console.log("changeToFahrenheit");
-		console.log(weatherData);
 		if (weatherData.unitName === "metric") {
 			setWeatherData({
 				temperature: (weatherData.temperature * 9) / 5 + 32,
@@ -124,11 +118,10 @@ export default function Weather2(props) {
 		}
 	}
 
-	console.log(weatherData);
 	if (weatherData.loaded === false) {
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${props.defcity}&appid=${apiKey}&units=${unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
-		console.log(props.defcity);
+
 		return (
 			<div className="Weather">
 				<div className="container mainPanel">"Loading"</div>
