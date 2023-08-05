@@ -4,21 +4,21 @@ import axios from "axios";
 import "./Weather2.css";
 
 //import Forecast from "./Forecast";
+
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
-// Bootstrap Bundle JS
 import "bootstrap/dist/js/bootstrap.bundle.min";
 
 export default function Weather2(props) {
-	let [weatherData, setWeatherData] = useState({ unitName: "metric", loaded: false });
+	let [weatherData, setWeatherData] = useState({ city: props.city, unitName: "metric", loaded: false });
 
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	//const shortMonths = [ "Jan", "Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec",];
 
-	const apiKey = "281450ec88936f4fa8ee9864682b49a0";
+	//const apiKey = "281450ec88936f4fa8ee9864682b49a0";
 	const unitName = `metric`;
-	//const apiKey2 = "6782253072f7d90462731a624097fc54";
+	const apiKey = "6782253072f7d90462731a624097fc54";
 
 	//changing city name
 	function changeCity(event) {
@@ -40,6 +40,7 @@ export default function Weather2(props) {
 
 	//set weather info
 	function setCityInfo(response) {
+		console.log("setCityInfo");
 		setWeatherData({
 			city: response.data.name,
 			temperature: response.data.main.temp,
@@ -53,6 +54,8 @@ export default function Weather2(props) {
 			//		units: "C",
 			updateTime: getDateString(new Date(response.data.dt * 1000)),
 		});
+		console.log("setCityInfo 2");
+		console.log(weatherData);
 	}
 
 	// if weather no loaded
@@ -61,7 +64,9 @@ export default function Weather2(props) {
 	}
 
 	function getCityInfo(cityName) {
+		console.log(cityName + " city info");
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${unitName}`;
+		console.log(url + " city info");
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
 	}
 
@@ -101,13 +106,23 @@ export default function Weather2(props) {
 			});
 		}
 	}
+	console.log(weatherData.city + "  main");
 
-	if (!weatherData.loaded) {
-		setWeatherData({ city: props.defcity, loaded: true });
-		getCityInfo(weatherData.city);
+	if (weatherData.loaded === false) {
+		setWeatherData({ loaded: true });
+		getCityInfo(props.defcity);
+		console.log("if after get city info");
+
+		console.log(weatherData);
 	}
-
 	return (
+		<div>
+			{weatherData.city}
+			<br />
+			{weatherData.temp}
+			<br />
+			{weatherData.loaded}
+		</div> /*
 		<div className="Weather">
 			<div className="container mainPanel">
 				<div className="d-flex justify-content-between ">
@@ -181,10 +196,9 @@ export default function Weather2(props) {
 					Ievgeniia Mukhamet
 				</a>
 			</footer>
-		</div>
+		</div>*/
 	);
 }
-
 /*<div className=" d-flex justify-content-between">
 					<Forecast
 						mintemp="18"
