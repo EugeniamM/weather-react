@@ -3,7 +3,7 @@ import axios from "axios";
 
 import "./Weather2.css";
 
-//import Forecast from "./Forecast";
+import WeatherForecast from "./WeatherForecast";
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
 // Bootstrap Bundle JS
@@ -13,6 +13,7 @@ export default function Weather2(props) {
 	//
 	let [city, setCity] = useState("");
 	let [weatherData, setWeatherData] = useState({ unitName: "metric", loaded: false });
+	let [forecastData, setForecastData] = useState([{}]);
 
 	//current date and time
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -41,8 +42,43 @@ export default function Weather2(props) {
 		);
 	}
 
+	//forecastinfo
+	function setForecastInfo(response) {
+		setForecastData([
+			{
+				min: response.data.daily[0].temp.min,
+				max: response.data.daily[0].temp.max,
+				icon: `https://openweathermap.org/img/wn/${response.data.daily[0].weather[0].icon}@2x.png`,
+			},
+			{
+				min: response.data.daily[1].temp.min,
+				max: response.data.daily[1].temp.max,
+				icon: `https://openweathermap.org/img/wn/${response.data.daily[1].weather[0].icon}@2x.png`,
+			},
+			{
+				min: response.data.daily[2].temp.min,
+				max: response.data.daily[2].temp.max,
+				icon: `https://openweathermap.org/img/wn/${response.data.daily[2].weather[0].icon}@2x.png`,
+			},
+			{
+				min: response.data.daily[3].temp.min,
+				max: response.data.daily[3].temp.max,
+				icon: `https://openweathermap.org/img/wn/${response.data.daily[3].weather[0].icon}@2x.png`,
+			},
+			{
+				min: response.data.daily[4].temp.min,
+				max: response.data.daily[4].temp.max,
+				icon: `https://openweathermap.org/img/wn/${response.data.daily[4].weather[0].icon}@2x.png`,
+			},
+		]);
+	}
+
+	function getForecastInfoError() {
+		alert("Error");
+	}
 	//set weather info
 	function setCityInfo(response) {
+		console.log(response.data);
 		setWeatherData({
 			city: response.data.name,
 			temperature: response.data.main.temp,
@@ -57,7 +93,14 @@ export default function Weather2(props) {
 			unitName: weatherData.unitName,
 			updateTime: getDateString(new Date(response.data.dt * 1000)),
 		});
+
+		//console.log(response.data.);
+		//	response.date.coords.latitude;
+		//	response.date.coords.longitude;
+		const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${response.data.coord.lat}&lon=${response.data.coord.lon}&appid=${apiKey}&units=${weatherData.unitName}`;
+		axios.get(url).then(setForecastInfo).catch(getForecastInfoError);
 	}
+
 	function getCityInfo(cityName) {
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${weatherData.unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
@@ -127,114 +170,96 @@ export default function Weather2(props) {
 				<div className="container mainPanel">"Loading"</div>
 			</div>
 		);
-	} else
-		return (
-			<div className="Weather">
-				<div className="container mainPanel">
-					<div className="d-flex justify-content-between ">
-						<div className="current-city" onClick={getCurrentLocation}>
-							Current city{" "}
-						</div>
-						<div className="current-city" onClick={() => getCityInfo("Odessa")}>
-							Odessa{" "}
-						</div>
-						<div className="current-city" onClick={() => getCityInfo("London")}>
-							London{" "}
-						</div>
-						<div className="current-city" onClick={() => getCityInfo("Lisbon")}>
-							Lisbon{" "}
-						</div>
-					</div>
-					<div className="container p-0">
-						<form className="d-flex mt-1 justify-content-center w-100" role="search" id="search-form" onSubmit={searchFunc}>
-							<input
-								className="form-control searchInput w-100"
-								type="search"
-								placeholder="Enter a city name"
-								aria-label="newCity"
-								onChange={changeCity}
-							/>
-							<button className="btn btn-outline-warning searchBtn" type="submit">
-								<i className="fa-solid fa-magnifying-glass searchIcon"></i>
-							</button>
-						</form>
-					</div>
-					<h1 className="city-name">{weatherData.city}</h1>
+	}
 
-					<div className="main-info">
-						<b>Update time: </b>
-						{weatherData.updateTime}
-						<br />
-						<b> Feels like:</b> {Math.round(weatherData.feelslike)}°C <b> Min: </b>
-						{Math.round(weatherData.mintemp)}°C <b> Max: </b>
-						{Math.round(weatherData.maxtemp)}°C{" "}
+	return (
+		<div className="Weather">
+			<div className="container mainPanel">
+				<div className="d-flex justify-content-between ">
+					<div className="current-city" onClick={getCurrentLocation}>
+						Current city{" "}
 					</div>
+					<div className="current-city" onClick={() => getCityInfo("Odessa")}>
+						Odessa{" "}
+					</div>
+					<div className="current-city" onClick={() => getCityInfo("London")}>
+						London{" "}
+					</div>
+					<div className="current-city" onClick={() => getCityInfo("Lisbon")}>
+						Lisbon{" "}
+					</div>
+				</div>
+				<div className="container p-0">
+					<form className="d-flex mt-1 justify-content-center w-100" role="search" id="search-form" onSubmit={searchFunc}>
+						<input
+							className="form-control searchInput w-100"
+							type="search"
+							placeholder="Enter a city name"
+							aria-label="newCity"
+							onChange={changeCity}
+						/>
+						<button className="btn btn-outline-warning searchBtn" type="submit">
+							<i className="fa-solid fa-magnifying-glass searchIcon"></i>
+						</button>
+					</form>
+				</div>
+				<h1 className="city-name">{weatherData.city}</h1>
 
-					<div className=" d-flex  justify-content-between align-items-center">
-						<div>
-							<img src={weatherData.icon} alt="Clear" />
-							<span className="main-temp">{Math.round(weatherData.temperature)}</span>
-							<span className="units">
-								<span className={weatherData.unitName === "metric" ? "currentUnit" : "tempUnit"} onClick={changeToMetric}>
-									°C
-								</span>{" "}
-								|{" "}
-								<span className={weatherData.unitName !== "metric" ? "currentUnit" : "tempUnit"} onClick={changeToFahrenheit}>
-									°F
-								</span>
+				<div className="main-info">
+					<b>Update time: </b>
+					{weatherData.updateTime}
+					<br />
+					<b> Feels like:</b> {Math.round(weatherData.feelslike)}°C <b> Min: </b>
+					{Math.round(weatherData.mintemp)}°C <b> Max: </b>
+					{Math.round(weatherData.maxtemp)}°C{" "}
+				</div>
+
+				<div className=" d-flex  justify-content-between align-items-center">
+					<div>
+						<img src={weatherData.icon} alt="Clear" />
+						<span className="main-temp">{Math.round(weatherData.temperature)}</span>
+						<span className="units">
+							<span className={weatherData.unitName === "metric" ? "currentUnit" : "tempUnit"} onClick={changeToMetric}>
+								°C
+							</span>{" "}
+							|{" "}
+							<span className={weatherData.unitName !== "metric" ? "currentUnit" : "tempUnit"} onClick={changeToFahrenheit}>
+								°F
 							</span>
-						</div>
+						</span>
+					</div>
 
-						<div className="mr-4">
-							<div className="main-info">
-								<b>Humidity</b>: {weatherData.humidity}%
-								<br />
-								<b>Wind:</b> {weatherData.wind} km/h
-								<br />
-								<span className="text-capitalize">{weatherData.description}</span>
-							</div>
+					<div className="mr-4">
+						<div className="main-info">
+							<b>Humidity</b>: {weatherData.humidity}%
+							<br />
+							<b>Wind:</b> {weatherData.wind} km/h
+							<br />
+							<span className="text-capitalize">{weatherData.description}</span>
 						</div>
 					</div>
 				</div>
-				<footer>
-					<a href="https://github.com/EugeniamM/weather-react.git" target="_blanc">
-						Open-source code
-					</a>{" "}
-					from{" "}
-					<a href="https://super-babka-75dc22.netlify.app" target="_blanc">
-						Ievgeniia Mukhamet
-					</a>
-				</footer>
+
+				<div className=" d-flex justify-content-between">
+					{console.log(forecastData)}
+					<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
+					<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
+				</div>
 			</div>
-		);
+			<footer>
+				<a href="https://github.com/EugeniamM/weather-react.git" target="_blanc">
+					Open-source code
+				</a>{" "}
+				from{" "}
+				<a href="https://super-babka-75dc22.netlify.app" target="_blanc">
+					Ievgeniia Mukhamet
+				</a>
+			</footer>
+		</div>
+	);
 }
+/*						<WeatherForecast mintemp={forecastData[1].min} maxtemp={forecastData[1].max} date="18 sept" icon={forecastData[1].icon} />
 
-/*<div className=" d-flex justify-content-between">
-					<Forecast
-						mintemp="18"
-						maxtemp="24"
-						date="18 sept"
-						icon="https://openweathermap.org/img/wn/01d@2x.png"
-					/>
+						<WeatherForecast mintemp={forecastData[2].min} maxtemp={forecastData[2].max} date="18 sept" icon={forecastData[2].icon} />
 
-					<Forecast
-						mintemp="15"
-						maxtemp="22"
-						date="19 sept"
-						icon="https://openweathermap.org/img/wn/01d@2x.png"
-					/>
-
-					<Forecast
-						mintemp="14"
-						maxtemp="24"
-						date="20 sept"
-						icon="https://openweathermap.org/img/wn/01d@2x.png"
-					/>
-
-					<Forecast
-						mintemp="10"
-						maxtemp="22"
-						date="21 sept"
-						icon="https://openweathermap.org/img/wn/01d@2x.png"
-					/>
-				</div>*/
+						<WeatherForecast mintemp={forecastData[3].min} maxtemp={forecastData[3].max} date="18 sept" icon={forecastData[3].icon} />*/
