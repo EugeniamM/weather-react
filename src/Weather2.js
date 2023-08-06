@@ -243,7 +243,7 @@ export default function Weather2(props) {
 				<div className=" d-flex justify-content-between">
 					{console.log(forecastData)}
 					<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
-					<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
+					<WeatherForecast mintemp={forecastData[1].min} maxtemp={forecastData[1].max} date="18 sept" icon={forecastData[1].icon} />
 				</div>
 			</div>
 			<footer>
