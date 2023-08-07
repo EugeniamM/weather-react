@@ -3,7 +3,7 @@ import axios from "axios";
 
 import "./Weather2.css";
 
-import WeatherForecast from "./WeatherForecast";
+//import WeatherForecast from "./WeatherForecast";
 // Bootstrap CSS
 import "bootstrap/dist/css/bootstrap.min.css";
 // Bootstrap Bundle JS
@@ -13,7 +13,7 @@ export default function Weather2(props) {
 	//
 	let [city, setCity] = useState("");
 	let [weatherData, setWeatherData] = useState({ unitName: "metric", loaded: false });
-	let [forecastData, setForecastData] = useState([{}]);
+	//	let [forecastData, setForecastData] = useState([{}]);
 
 	//current date and time
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -41,7 +41,7 @@ export default function Weather2(props) {
 			(dataInfo.getMinutes() < 10 ? `0${dataInfo.getMinutes()}` : dataInfo.getMinutes())
 		);
 	}
-
+	/*
 	//forecastinfo
 	function setForecastInfo(response) {
 		setForecastData([
@@ -75,7 +75,7 @@ export default function Weather2(props) {
 
 	function getForecastInfoError() {
 		alert("Error");
-	}
+	}*/
 	//set weather info
 	function setCityInfo(response) {
 		console.log(response.data);
@@ -98,13 +98,13 @@ export default function Weather2(props) {
 	}
 
 	function getCityInfo(cityName) {
-		console.log(url);
+		//	console.log(url);
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${weatherData.unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
-		console.log(url);
-		const url2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${weatherData.lat}&lon=${weatherData.lon}&appid=${apiKey}&units=${weatherData.unitName}`;
-		axios.get(url2).then(setForecastInfo).catch(getForecastInfoError);
-		console.log(url2);
+		//	console.log(url);
+		//	const url2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${weatherData.lat}&lon=${weatherData.lon}&appid=${apiKey}&units=${weatherData.unitName}`;
+		//	axios.get(url2).then(setForecastInfo).catch(getForecastInfoError);
+		//	console.log(url2);
 	}
 
 	// if weather no loaded
@@ -163,9 +163,9 @@ export default function Weather2(props) {
 	}
 
 	if (weatherData.loaded === false) {
-		console.log("check load");
-		console.log(weatherData.loaded);
-		console.log(weatherData.name);
+		//	console.log("check load");
+		//	console.log(weatherData.loaded);
+		//	console.log(weatherData.loaded);
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${props.defcity}&appid=${apiKey}&units=${unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
 
@@ -175,10 +175,7 @@ export default function Weather2(props) {
 			</div>
 		);
 	}
-	return "done";
-}
 
-/*
 	return (
 		<div className="Weather">
 			<div className="container mainPanel">
@@ -247,7 +244,7 @@ export default function Weather2(props) {
 					</div>
 				</div>
 
-				<div className=" d-flex justify-content-between">min {forecastData[0].min}</div>
+				<div className=" d-flex justify-content-between"></div>
 			</div>
 			<footer>
 				<a href="https://github.com/EugeniamM/weather-react.git" target="_blanc">
