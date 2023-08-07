@@ -92,18 +92,19 @@ export default function Weather2(props) {
 			loaded: true,
 			unitName: weatherData.unitName,
 			updateTime: getDateString(new Date(response.data.dt * 1000)),
+			lat: response.data.coord.lat,
+			lon: response.data.coord.lon,
 		});
-
-		//console.log(response.data.);
-		//	response.date.coords.latitude;
-		//	response.date.coords.longitude;
-		const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${response.data.coord.lat}&lon=${response.data.coord.lon}&appid=${apiKey}&units=${weatherData.unitName}`;
-		axios.get(url).then(setForecastInfo).catch(getForecastInfoError);
 	}
 
 	function getCityInfo(cityName) {
+		console.log(url);
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=${weatherData.unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
+		console.log(url);
+		const url2 = `https://api.openweathermap.org/data/2.5/onecall?lat=${weatherData.lat}&lon=${weatherData.lon}&appid=${apiKey}&units=${weatherData.unitName}`;
+		axios.get(url2).then(setForecastInfo).catch(getForecastInfoError);
+		console.log(url2);
 	}
 
 	// if weather no loaded
@@ -162,6 +163,9 @@ export default function Weather2(props) {
 	}
 
 	if (weatherData.loaded === false) {
+		console.log("check load");
+		console.log(weatherData.loaded);
+		console.log(weatherData.name);
 		const url = `https://api.openweathermap.org/data/2.5/weather?q=${props.defcity}&appid=${apiKey}&units=${unitName}`;
 		axios.get(url).then(setCityInfo).catch(getCityInfoError);
 
@@ -171,7 +175,10 @@ export default function Weather2(props) {
 			</div>
 		);
 	}
+	return "done";
+}
 
+/*
 	return (
 		<div className="Weather">
 			<div className="container mainPanel">
@@ -240,15 +247,7 @@ export default function Weather2(props) {
 					</div>
 				</div>
 
-				<div className=" d-flex justify-content-between">
-					{console.log(forecastData)}
-					<span>
-						<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
-					</span>
-					<span>
-						<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
-					</span>
-				</div>
+				<div className=" d-flex justify-content-between">min {forecastData[0].min}</div>
 			</div>
 			<footer>
 				<a href="https://github.com/EugeniamM/weather-react.git" target="_blanc">
@@ -262,7 +261,18 @@ export default function Weather2(props) {
 		</div>
 	);
 }
-/*						<WeatherForecast mintemp={forecastData[1].min} maxtemp={forecastData[1].max} date="18 sept" icon={forecastData[1].icon} />
+/*			
+		<span>
+						<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
+					</span>
+					<span>
+						<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
+					</span>
+
+
+
+
+<WeatherForecast mintemp={forecastData[1].min} maxtemp={forecastData[1].max} date="18 sept" icon={forecastData[1].icon} />
 
 						<WeatherForecast mintemp={forecastData[2].min} maxtemp={forecastData[2].max} date="18 sept" icon={forecastData[2].icon} />
 
