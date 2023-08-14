@@ -1,3 +1,10 @@
+:root {
+	--accent-color: #ec6e4c;
+	--main-color: rgb(21, 21, 22);
+	--main-font: "Open Sans", sans-serif;
+	--accent-font: "Dosis", sans-serif;
+	--link-color: #01bfc7;
+}
 .Weather {
 	text-align: center;
 
@@ -68,8 +75,7 @@
 .Weather .main-temp {
 	color: var(--accent-color);
 }
-.Weather .main-info,
-.next-days {
+.Weather .main-info {
 	color: var(--main-color);
 	font-size: 13px;
 	font-weight: 400;
@@ -78,34 +84,6 @@
 
 	margin: 0;
 	padding: 0;
-}
-
-.Weather .next-days {
-	text-align: center;
-	position: relative;
-	bottom: -10px;
-	padding: 10px;
-}
-
-.Weather .next-temp-max,
-.next-temp-min {
-	font-family: var(--accent-font);
-	font-size: 24px;
-	font-weight: 900;
-	line-height: 24px;
-	color: white;
-	position: relative;
-	bottom: 20px;
-}
-.Weather .next-temp-min {
-	font-size: 20px;
-	opacity: 70%;
-	color: var(--main-color);
-}
-
-.Weather .next-day-icon {
-	position: relative;
-	bottom: 10px;
 }
 
 .Weather .main-info {
