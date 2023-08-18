@@ -44,7 +44,6 @@ export default function Weather2(props) {
 
 	//set weather info
 	function setCityInfo(response) {
-		console.log(response.data);
 		setWeatherData({
 			city: response.data.name,
 			temperature: response.data.main.temp,

@@ -4,14 +4,9 @@ import "./WeatherForecastDay.css";
 export default function WeatherForecastDay(props) {
 	const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-	// current date and time from Data();
 	function getDateString(dataInfo) {
 		return (
 			dataInfo.getDate() + " " + shortMonths[dataInfo.getMonth()] //+
-			//	" " +
-			//	(dataInfo.getHours() < 10 ? `0${dataInfo.getHours()}` : dataInfo.getHours()) +
-			//":" +
-			//(dataInfo.getMinutes() < 10 ? `0${dataInfo.getMinutes()}` : dataInfo.getMinutes())
 		);
 	}
 

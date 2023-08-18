@@ -15,9 +15,6 @@ export default function WeatherForecast(props) {
 	//forecastinfo
 	function setForecastInfo(response) {
 		setLoaded(true);
-		console.log("response");
-		console.log(response.data);
-
 		setForecastData([
 			{
 				min: response.data.daily[0].temp.min,
@@ -81,10 +78,7 @@ export default function WeatherForecast(props) {
 		);
 	} else {
 		const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${props.lat}&lon=${props.lon}&cnt=5&appid=${apiKey}&units=${props.unitName}`;
-		console.log(url);
 		axios.get(url).then(setForecastInfo).catch(getForecastInfoError);
 		return "Loading";
 	}
 }
-//	<WeatherForecastDay mintemp="10" maxtemp="12" date="18 sept" icon="01d.png" />
-//<WeatherForecast mintemp={dailyForecast.min} maxtemp={dailyForecast.max} date="18 sept" icon={dailyForecast.icon} />
