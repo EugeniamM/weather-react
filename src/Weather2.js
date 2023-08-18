@@ -121,6 +121,8 @@ export default function Weather2(props) {
 				description: weatherData.description,
 				loaded: true,
 				updateTime: weatherData.updateTime,
+				lat: weatherData.lat,
+				lon: weatherData.lon,
 			});
 		}
 	}
@@ -218,19 +220,3 @@ export default function Weather2(props) {
 		);
 	}
 }
-/*			
-		<span>
-						<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
-					</span>
-					<span>
-						<WeatherForecast mintemp={forecastData[0].min} maxtemp={forecastData[0].max} date="18 sept" icon={forecastData[0].icon} />
-					</span>
-
-
-
-
-<WeatherForecast mintemp={forecastData[1].min} maxtemp={forecastData[1].max} date="18 sept" icon={forecastData[1].icon} />
-
-						<WeatherForecast mintemp={forecastData[2].min} maxtemp={forecastData[2].max} date="18 sept" icon={forecastData[2].icon} />
-
-						<WeatherForecast mintemp={forecastData[3].min} maxtemp={forecastData[3].max} date="18 sept" icon={forecastData[3].icon} />*/
