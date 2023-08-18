@@ -16,13 +16,9 @@ export default function Weather2(props) {
 	let [loaded, setLoaded] = useState(false);
 
 	//current date and time
-	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-	//const shortMonths = [ "Jan", "Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec",];
 
 	const apiKey = "281450ec88936f4fa8ee9864682b49a0";
-	//const unitName = `metric`;
-	//const apiKey = "6782253072f7d90462731a624097fc54";
 
 	//changing city name
 	function changeCity(event) {
@@ -145,7 +141,7 @@ export default function Weather2(props) {
 						</div>
 					</div>
 					<div className="container p-0">
-						<form className="d-flex mt-1 justify-content-center w-100" role="search" id="search-form" onSubmit={searchFunc}>
+						<form className="d-flex mt-1 justify-content-center w-100" role="search" onSubmit={searchFunc}>
 							<input
 								className="form-control searchInput w-100"
 								type="search"
