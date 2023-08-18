@@ -52,10 +52,10 @@ export default function WeatherForecast(props) {
 		return (
 			<div className=" d-flex  justify-content-between align-items-center">
 				{forecastData.map(function (dailyForecast, index) {
-					if (index < 6) {
-						console.log(dailyForecast);
-						return <WeatherForecastDay mintemp={dailyForecast.min} maxtemp={dailyForecast.max} date="18 sept" icon={dailyForecast.icon} />;
-					}
+					//if (index < 6) {
+					console.log(dailyForecast);
+					return <WeatherForecastDay mintemp={dailyForecast.min} maxtemp={dailyForecast.max} date="18 sept" icon={dailyForecast.icon} />;
+					//}
 				})}
 			</div>
 		);
