@@ -170,29 +170,27 @@ export default function Weather2(props) {
 						{Math.round(weatherData.maxtemp)}°C{" "}
 					</div>
 
-					<div className=" d-flex  justify-content-between align-items-center">
-						<div>
+					<div className="row align-items-center">
+						<div className="col-8">
 							<img src={weatherData.icon} alt="Clear" />
-							<span className="main-temp">{Math.round(weatherData.temperature)}</span>
+							<span className="main-temp">{Math.round(weatherData.temperature)}&nbsp;</span>
 							<span className="units">
 								<span className={weatherData.unitName === "metric" ? "currentUnit" : "tempUnit"} onClick={changeToMetric}>
 									°C
-								</span>{" "}
-								|{" "}
+								</span>
+								&nbsp;|&nbsp;
 								<span className={weatherData.unitName !== "metric" ? "currentUnit" : "tempUnit"} onClick={changeToFahrenheit}>
 									°F
 								</span>
 							</span>
 						</div>
 
-						<div className="mr-4">
-							<div className="main-info">
-								<b>Humidity</b>: {weatherData.humidity}%
-								<br />
-								<b>Wind:</b> {weatherData.wind} km/h
-								<br />
-								<span className="text-capitalize">{weatherData.description}</span>
-							</div>
+						<div className="col-4 main-info align-items-center p-4">
+							<b>Humidity</b>: {weatherData.humidity}%
+							<br />
+							<b>Wind:</b> {weatherData.wind} km/h
+							<br />
+							<span className="text-capitalize">{weatherData.description}</span>
 						</div>
 					</div>
 

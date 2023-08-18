@@ -63,16 +63,18 @@ export default function WeatherForecast(props) {
 
 	if (loaded) {
 		return (
-			<div className=" d-flex  justify-content-between align-items-center">
+			<div className="row align-items-center">
 				{forecastData.map(function (dailyForecast, index) {
 					return (
-						<WeatherForecastDay
-							mintemp={dailyForecast.min}
-							maxtemp={dailyForecast.max}
-							date={dailyForecast.date}
-							icon={dailyForecast.icon}
-							descr={dailyForecast.descr}
-						/>
+						<div className="col p-0">
+							<WeatherForecastDay
+								mintemp={dailyForecast.min}
+								maxtemp={dailyForecast.max}
+								date={dailyForecast.date}
+								icon={dailyForecast.icon}
+								descr={dailyForecast.descr}
+							/>
+						</div>
 					);
 				})}
 			</div>
