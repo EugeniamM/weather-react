@@ -170,7 +170,7 @@ export default function Weather2(props) {
 					</div>
 
 					<div className="row align-items-center">
-						<div className="col-8">
+						<div className="col-7">
 							<img src={weatherData.icon} alt="Clear" />
 							<span className="main-temp">{Math.round(weatherData.temperature)}&nbsp;</span>
 							<span className="units">
@@ -184,7 +184,7 @@ export default function Weather2(props) {
 							</span>
 						</div>
 
-						<div className="col-4 main-info align-items-center p-4">
+						<div className="col-5 main-info align-items-center p-4">
 							<b>Humidity</b>: {weatherData.humidity}%
 							<br />
 							<b>Wind:</b> {weatherData.wind} km/h
