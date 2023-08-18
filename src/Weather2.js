@@ -14,16 +14,15 @@ export default function Weather2(props) {
 	let [city, setCity] = useState("");
 	let [weatherData, setWeatherData] = useState({ unitName: "metric" });
 	let [loaded, setLoaded] = useState(false);
-	//	let [forecastData, setForecastData] = useState([{}]);
 
 	//current date and time
 	//const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 	const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 	//const shortMonths = [ "Jan", "Feb","Mar","Apr","May","Jun", "Jul","Aug","Sep","Oct","Nov","Dec",];
 
-	//const apiKey = "281450ec88936f4fa8ee9864682b49a0";
+	const apiKey = "281450ec88936f4fa8ee9864682b49a0";
 	//const unitName = `metric`;
-	const apiKey = "6782253072f7d90462731a624097fc54";
+	//const apiKey = "6782253072f7d90462731a624097fc54";
 
 	//changing city name
 	function changeCity(event) {
@@ -42,41 +41,7 @@ export default function Weather2(props) {
 			(dataInfo.getMinutes() < 10 ? `0${dataInfo.getMinutes()}` : dataInfo.getMinutes())
 		);
 	}
-	/*
-	//forecastinfo
-	function setForecastInfo(response) {
-		setForecastData([
-			{
-				min: response.data.daily[0].temp.min,
-				max: response.data.daily[0].temp.max,
-				icon: `https://openweathermap.org/img/wn/${response.data.daily[0].weather[0].icon}@2x.png`,
-			},
-			{
-				min: response.data.daily[1].temp.min,
-				max: response.data.daily[1].temp.max,
-				icon: `https://openweathermap.org/img/wn/${response.data.daily[1].weather[0].icon}@2x.png`,
-			},
-			{
-				min: response.data.daily[2].temp.min,
-				max: response.data.daily[2].temp.max,
-				icon: `https://openweathermap.org/img/wn/${response.data.daily[2].weather[0].icon}@2x.png`,
-			},
-			{
-				min: response.data.daily[3].temp.min,
-				max: response.data.daily[3].temp.max,
-				icon: `https://openweathermap.org/img/wn/${response.data.daily[3].weather[0].icon}@2x.png`,
-			},
-			{
-				min: response.data.daily[4].temp.min,
-				max: response.data.daily[4].temp.max,
-				icon: `https://openweathermap.org/img/wn/${response.data.daily[4].weather[0].icon}@2x.png`,
-			},
-		]);
-	}
 
-	function getForecastInfoError() {
-		alert("Error");
-	}*/
 	//set weather info
 	function setCityInfo(response) {
 		console.log(response.data);
@@ -229,7 +194,7 @@ export default function Weather2(props) {
 						</div>
 					</div>
 
-					<WeatherForecast lat={weatherData.lat} lon={weatherData.lon} />
+					<WeatherForecast lat={weatherData.lat} lon={weatherData.lon} unitName={weatherData.unitName} />
 				</div>
 				<footer>
 					<a href="https://github.com/EugeniamM/weather-react.git" target="_blanc">
