@@ -1,5 +1,5 @@
-.WeatherForecastDay {
-	/*
+/*.WeatherForecastDay {
+	
 	text-align: center;
 
 	background: rgb(255, 255, 255);
@@ -14,8 +14,8 @@
 
 	margin: auto;
 	padding: 0;
-}*/
 }
+}*/
 .WeatherForecastDay {
 	font-family: var(--main-font);
 	margin: 0;
